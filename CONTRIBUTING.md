@@ -231,6 +231,37 @@ CI will block PRs if any test fails.
 
 Tip: `pip install -r requirements-dev.txt` (see **[`requirements-dev.txt`](./requirements-dev.txt)**) installs `pytest`, `pytest-mock`, `httpx`, and Ruff in one go, pinned to match CI.
 
+### Running tests locally
+
+**Run every recipe's test suite (mirrors CI):**
+
+``` bash
+for r in recipes/*/; do (cd "$r" && LLM_API_KEY=nvapi-test pytest -v) || break; done
+```
+
+**Run a single recipe's tests** (from within that recipe's directory):
+
+```bash
+LLM_API_KEY=nvapi-test pytest -v
+```
+
+**Run the playground tests** (these live separately, under `playground/`):
+
+```bash
+cd playground && pytest -v
+```
+
+**Why `LLM_API_KEY=nvapi-test`?** Each recipe's `llm.py` reads the API key from
+the environment at import time to construct the LLM client, and import fails
+if the variable is unset — even though no network call is made at import or
+during offline tests. `nvapi-test` is a safe placeholder value for this; see
+the docstring in [`llm.py`](./recipes/<any-recipe>/llm.py) for details on how
+the key is used.
+
+**CI parity:** the commands above are the same ones run in
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml). If they pass
+locally, a CI pass is a strong (though not guaranteed) signal.
+
 ---
 
 ## Pull Request Process

@@ -29,6 +29,29 @@ app = FastAPI(title="CrewAI Recipes Playground")
 RECIPES_DIR = Path(__file__).parent.parent / "recipes"
 
 
+def is_timeout_error(exc: BaseException) -> bool:
+    """True if exc, or anything in its cause chain, is an LLM request timeout."""
+    seen = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        if "timeout" in type(exc).__name__.lower() or "timed out" in str(exc).lower():
+            return True
+        exc = exc.__cause__ or exc.__context__
+    return False
+
+
+def timeout_message() -> str:
+    """Actionable error text for a timed out LLM call."""
+    raw = os.getenv("LLM_TIMEOUT", "")
+    try:
+        seconds = float(raw)
+        if seconds <= 0:
+            raise ValueError
+    except ValueError:
+        seconds = 120.0
+    return f"LLM call timed out after {seconds:g}s, try again, or raise LLM_TIMEOUT"
+
+
 class RunRequest(BaseModel):
     recipe: str
     inputs: dict[str, str]
@@ -258,6 +281,8 @@ def run_recipe(req: RunRequest):
                     status_code=401,
                     detail="API Key is missing. Please check your .env file.",
                 )
+            if is_timeout_error(e):
+                raise HTTPException(status_code=504, detail=timeout_message())
             raise HTTPException(status_code=500, detail=f"Execution error: {err_str}")
 
     finally:
@@ -379,6 +404,8 @@ def execute_recipe_stream(
                         "error": "API Key is missing. Please check your .env file.",
                     }
                 )
+            elif is_timeout_error(e):
+                push_event({"type": "error", "error": timeout_message()})
             else:
                 push_event({"type": "error", "error": f"Execution error: {err_str}"})
 

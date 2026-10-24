@@ -1814,7 +1814,7 @@
                 <span id="cached-badge" class="cached-badge">⚡ Cached</span>
                 <button class="copy-btn" id="copy-result-btn" style="display: none;" title="Copy result to clipboard">Copy</button>
             </div>
-            <div id="result-panel" class="result-body is-empty"></div>
+            <div id="result" class="result-body is-empty"></div>
         </div>
     </section>
 
@@ -2025,20 +2025,12 @@
     const recipeTitle     = document.getElementById('recipe-title');
     const recipeStatus    = document.getElementById('recipe-status');
     const desc            = document.getElementById('recipe-desc');
-    if (!document.getElementById('result')) {
-        const _origGetElementById = document.getElementById.bind(document);
-        document.getElementById = function (id) {
-            if (id === 'result') return _origGetElementById('result-panel');
-            return _origGetElementById(id);
-        };
-    }
-
     const inputsContainer = document.getElementById('dynamic-inputs');
     const runBtn          = document.getElementById('run-btn');
     const stopBtn         = document.getElementById('stop-btn');
     const clearOutputBtn  = document.getElementById('clear-output');
     const kbdHint         = document.getElementById('kbd-hint');
-    const resultPanel     = document.getElementById('result-panel') || document.getElementById('result');
+    const resultPanel     = document.getElementById('result');
     const resultBadge     = document.getElementById('result-badge');
     const errorMsg        = document.getElementById('error-msg');
     const cachedBadge     = document.getElementById('cached-badge');
@@ -2863,19 +2855,19 @@
         }
     });
 
-    document.getElementById("clear-output").addEventListener("click", () => {
-        document.getElementById("result-panel").innerHTML = "";
+    clearOutputBtn.addEventListener("click", () => {
+        // Clearing output must never kill a live run: if a run is in
+        // progress, do nothing. Stop the run first, then Clear.
+        if (currentAbortController) return;
         // If there's a streaming-response container, clear that too.
         const streamContainer = document.getElementById("progress-stream");
         if (streamContainer) {
             streamContainer.innerHTML = "";
         }
         if (resultPanel) {
+            resultPanel.innerHTML = "";
             resultPanel.classList.add("is-empty");
             resultPanel._rawText = "";
-        }
-        if (currentAbortController) {
-            currentAbortController.abort();
         }
         resetTimeline();
         if (resultBadge) resultBadge.classList.remove("visible");

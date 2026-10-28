@@ -1,0 +1,17 @@
+[
+  {
+    "name": "learning_goal",
+    "label": "Learning Goal",
+    "example": "Learn Python for data analysis"
+  },
+  {
+    "name": "available_time",
+    "label": "Available Study Time",
+    "example": "2 hours per day for 4 weeks"
+  },
+  {
+    "name": "skill_level",
+    "label": "Current Skill Level",
+    "example": "Beginner"
+  }
+]

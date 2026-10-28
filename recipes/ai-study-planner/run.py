@@ -6,7 +6,8 @@ CLI entry point for running the AI study planner recipe.
 Usage:
     python run.py --learning_goal "Learn Python for data analysis" \
                   --available_time "2 hours per day for 4 weeks" \
-                  --skill_level "Beginner"
+                  --skill_level "Beginner" \
+                  --learning_style "project-based"
 """
 
 import argparse

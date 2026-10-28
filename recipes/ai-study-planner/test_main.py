@@ -12,8 +12,10 @@ RECIPE_DIR = Path(__file__).resolve().parent
 if str(RECIPE_DIR) not in sys.path:
     sys.path.insert(0, str(RECIPE_DIR))
 
-# Mock crewai module if not installed in the execution environment
-if "crewai" not in sys.modules:
+# Import crewai or mock if not installed in the execution environment
+try:
+    import crewai  # noqa: F401
+except ImportError:
     mock_crewai = MagicMock()
 
     class MockAgent:

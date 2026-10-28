@@ -15,6 +15,7 @@ def build_crew(
     learning_goal: str,
     available_time: str,
     skill_level: str = "Beginner",
+    learning_style: str = "project-based",
 ) -> Crew:
     """Build and return the AI Study Planner Crew.
 
@@ -22,11 +23,13 @@ def build_crew(
     - learning_goal
     - available_time
     - skill_level
+    - learning_style
 
     Args:
         learning_goal: What the learner wants to learn (e.g. 'Learn Python for data analysis').
         available_time: Total study time available (e.g. '2 hours per day for 4 weeks').
         skill_level: Starting proficiency level (e.g. 'Beginner').
+        learning_style: Preferred learning style (e.g. 'project-based').
 
     Returns:
         A configured Crew instance ready to call .kickoff().
@@ -39,6 +42,7 @@ def build_crew(
         learning_goal=learning_goal,
         available_time=available_time,
         skill_level=skill_level,
+        learning_style=learning_style,
     )
 
     crew = Crew(

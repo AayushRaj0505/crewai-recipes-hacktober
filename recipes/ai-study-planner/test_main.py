@@ -94,12 +94,13 @@ def test_build_agents() -> None:
 
 
 def test_build_tasks() -> None:
-    """Verify tasks are created with appropriate context and inputs."""
+    """Verify tasks are created with appropriate context, inputs, and learning style."""
     agents = build_agents()
     curriculum_planner, strategy_planner, synthesizer = agents
     goal = "Learn Python for data analysis"
     time = "2 hours per day for 4 weeks"
     level = "Beginner"
+    style = "project-based"
 
     tasks = build_tasks(
         curriculum_planner,
@@ -108,6 +109,7 @@ def test_build_tasks() -> None:
         learning_goal=goal,
         available_time=time,
         skill_level=level,
+        learning_style=style,
     )
     assert len(tasks) == 3
     curriculum_task, strategy_task, synthesis_task = tasks
@@ -119,18 +121,21 @@ def test_build_tasks() -> None:
     assert strategy_task.agent == strategy_planner
     assert curriculum_task in strategy_task.context
     assert time in strategy_task.description
+    assert style in strategy_task.description
 
     assert synthesis_task.agent == synthesizer
     assert curriculum_task in synthesis_task.context
     assert strategy_task in synthesis_task.context
+    assert style in synthesis_task.description
 
 
 def test_build_crew_and_kickoff() -> None:
-    """Verify build_crew configures the crew and kickoff runs."""
+    """Verify build_crew configures the crew with learning_style and kickoff runs."""
     crew = build_crew(
         learning_goal="Learn Python for data analysis",
         available_time="2 hours per day for 4 weeks",
         skill_level="Beginner",
+        learning_style="project-based",
     )
     assert len(crew.agents) == 3
     assert len(crew.tasks) == 3
@@ -146,7 +151,7 @@ def test_inputs_json_contract() -> None:
     assert inputs_file.exists()
     fields = json.loads(inputs_file.read_text(encoding="utf-8"))
     names = {f["name"] for f in fields}
-    assert names == {"learning_goal", "available_time", "skill_level"}
+    assert names == {"learning_goal", "available_time", "skill_level", "learning_style"}
 
 
 if __name__ == "__main__":

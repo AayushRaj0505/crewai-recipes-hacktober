@@ -65,6 +65,16 @@ def main() -> None:
         default="Beginner",
         help="Current skill level (e.g. 'Beginner', 'Intermediate', 'Advanced')",
     )
+    parser.add_argument(
+        "--learning_style",
+        "--learning-style",
+        "--style",
+        dest="learning_style",
+        type=str,
+        default="project-based",
+        choices=["project-based", "theory-first", "practice-heavy"],
+        help="Preferred learning style (project-based / theory-first / practice-heavy)",
+    )
 
     args = parser.parse_args()
     check_env()
@@ -72,13 +82,15 @@ def main() -> None:
     print("\n📚  AI Study Planner — Building Personalized Roadmap\n")
     print(f"   Learning Goal  : {args.learning_goal}")
     print(f"   Available Time : {args.available_time}")
-    print(f"   Skill Level    : {args.skill_level}\n")
+    print(f"   Skill Level    : {args.skill_level}")
+    print(f"   Learning Style : {args.learning_style}\n")
     print("─" * 60)
 
     crew = build_crew(
         learning_goal=args.learning_goal,
         available_time=args.available_time,
         skill_level=args.skill_level,
+        learning_style=args.learning_style,
     )
     result = crew.kickoff()
 

@@ -49,6 +49,13 @@ Learner Brief (Learning Goal, Available Time, Skill Level)
 | `learning_goal` | String | Yes | Subject or skill the learner wants to master | `"Learn Python for data analysis"` |
 | `available_time` | String | Yes | Daily/weekly time commitment and duration | `"2 hours per day for 4 weeks"` |
 | `skill_level` | String | No (default: `"Beginner"`) | Current starting proficiency level | `"Beginner"` |
+| `learning_style` | String | No (default: `"project-based"`) | Learning preference: `project-based`, `theory-first`, or `practice-heavy` | `"project-based"` |
+
+### Supported Learning Styles
+
+- **`project-based`**: Emphasizes building projects and learning concepts through practical implementation.
+- **`theory-first`**: Emphasizes core concepts, explanations, structured notes, followed by guided practice.
+- **`practice-heavy`**: Emphasizes interactive exercises, repetition drills, quizzes, and hands-on coding tasks.
 
 ---
 
@@ -70,7 +77,8 @@ cp .env.example .env   # add your LLM_API_KEY
 ```bash
 python run.py --learning_goal "Learn Python for data analysis" \
               --available_time "2 hours per day for 4 weeks" \
-              --skill_level "Beginner"
+              --skill_level "Beginner" \
+              --learning_style "project-based"
 ```
 
 ### Command Line Options
@@ -78,6 +86,7 @@ python run.py --learning_goal "Learn Python for data analysis" \
 - `--learning_goal`, `--learning-goal`, `--goal`: What you want to learn (default: `"Learn Python for data analysis"`).
 - `--available_time`, `--available-time`, `--time`: Total available time and cadence (default: `"2 hours per day for 4 weeks"`).
 - `--skill_level`, `--skill-level`, `--level`: Current skill level (default: `"Beginner"`).
+- `--learning_style`, `--learning-style`, `--style`: Preferred learning style (`project-based` / `theory-first` / `practice-heavy`, default: `"project-based"`).
 
 ### In the Playground
 

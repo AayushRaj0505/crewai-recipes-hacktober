@@ -13,5 +13,10 @@
     "name": "skill_level",
     "label": "Current Skill Level",
     "example": "Beginner"
+  },
+  {
+    "name": "learning_style",
+    "label": "Learning Style Preference (project-based / theory-first / practice-heavy)",
+    "example": "project-based"
   }
 ]
